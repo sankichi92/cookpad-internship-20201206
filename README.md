@@ -9,7 +9,7 @@ Cookpad 1 Day Internship へのご参加ありがとうございます！
 
 Ruby と Git を使用できる環境の準備をお願いします。
 環境がすでにある場合は、動作確認に進んでください。
-ない場合は、使用している OS ごとに以下の手順でインストールしてください（その他の OS の場合は https://www.ruby-lang.org/ja/documentation/installation/ を参照してください）。
+ない場合は、使用している OS ごとに以下の手順でインストールしてください（その他の OS の場合は https://www.ruby-lang.org/en/documentation/installation/ を参照してください）。
 
 ### macOS
 
