@@ -83,7 +83,7 @@ POST など、いくつか説明していない項目がありますが、以下
 +  vote = Vote.new(params['voter'], params['candidate'])
 +  poll.add_vote(vote)
 +
-+  redirect to("/polls/#{index}")
++  redirect to("/polls/#{index}"), 303
 +rescue Poll::InvalidCandidateError
 +  halt 400, '不正な候補名です'
 +end

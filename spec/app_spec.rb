@@ -55,7 +55,7 @@ RSpec.describe 'PollApp' do
           post '/polls/0/votes', { voter: 'Miyoshi', candidate: 'Alice' }
         }.to change { poll.votes.size }.by(1)
 
-        expect(last_response.status).to eq 302
+        expect(last_response.status).to eq 303
         expect(last_response.headers['Location']).to match %r{/polls/0$}
       end
     end
