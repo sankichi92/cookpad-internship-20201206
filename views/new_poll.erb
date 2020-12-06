@@ -1,0 +1,21 @@
+<h1>投票の作成</h1>
+<form action="/polls/new" method="post">
+
+  <label for="title">投票のタイトル</label>
+  <input id="title" name="title" type="text">
+  <br />
+
+  <label for="candidates[]">選択肢1</label>
+  <input type="text" name="candidates[]" value="">
+  <br />
+
+  <label for="candidates[]">選択肢2</label>
+  <input type="text" name="candidates[]" value="">
+  <br />
+
+  <label for="candidates[]">選択肢3</label>
+  <input type="text" name="candidates[]" value="">
+  <br />
+
+  <input type="submit" value="投票する">
+</form>

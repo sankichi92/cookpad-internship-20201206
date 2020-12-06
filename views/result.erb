@@ -1,0 +1,4 @@
+<h1><%= poll.title %>の結果</h1>
+<% result.keys.each_with_index do |key, index| %>
+<p><%= index + 1 %>位：<%= key %>, <%= result[key] %>票</p>
+<% end %>

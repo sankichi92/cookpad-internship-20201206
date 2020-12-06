@@ -17,6 +17,29 @@ RSpec.describe 'PollApp' do
     end
   end
 
+  describe 'GET /polls/new' do
+    it 'resonds 200 OK' do
+      get '/polls/new'
+      
+      expect(last_response.status).to eq 200
+    end
+  end
+
+  describe 'POST /polls/new' do
+
+    context 'with valid title and candidates' do
+      it 'create a new poll and redirect to /' do
+        expect {
+          post '/polls/new', {title: "Example Poll", candidates: ["a", "b", "c"]}
+      }.to change { $polls.length }.by(1)
+
+      expect(last_response.status).to eq 303
+      expect(last_response.headers['Location']).to match %r{/$}
+      end
+    end
+
+  end
+
   describe 'GET /polls/:id' do
     let(:poll) { Poll.new('Example Poll', ['Alice', 'Bob']) }
 
@@ -41,7 +64,30 @@ RSpec.describe 'PollApp' do
     end
   end
 
-  xdescribe 'POST /polls/:id/votes' do
+  describe 'GET /polls/:id/result' do
+    let(:poll) { Poll.new('Example Poll', ['Alice', 'Bob']) }
+    before do
+      $polls = [poll]
+    end
+
+    context 'with valid id' do
+      it 'responds 200 OK' do
+        get '/polls/0/result'
+
+        expect(last_response.status).to eq 200
+      end
+    end
+
+    context 'with invalid id' do
+      it 'responds 404 Not Found' do
+        get '/polls/1/result'
+
+        expect(last_response.status).to eq 404
+      end 
+    end
+  end
+
+  describe 'POST /polls/:id/votes' do
     let(:poll) { Poll.new('Example Poll', ['Alice', 'Bob']) }
 
     before do
