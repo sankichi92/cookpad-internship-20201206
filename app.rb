@@ -14,13 +14,15 @@ if db.connection == nil
 ])
 end
 
+$polls = db.polls
+
 get '/' do
-  erb :index, locals: { polls: db.polls }
+  erb :index, locals: { polls: $polls }
 end
 
 get '/polls/:id' do
   index = params['id'].to_i
-  poll = db.polls[index]
+  poll = $polls[index]
   halt 404, '投票が見つかりませんでした' if poll.nil?
 
   erb :poll, locals: { index: index, poll: poll }
@@ -28,7 +30,7 @@ end
 
 post '/polls/:id/votes' do
   index = params['id'].to_i
-  poll = db.polls[index]
+  poll = $polls[index]
   halt 404, '投票が見つかりませんでした' if poll.nil?
 
   vote = Vote.new(params['voter'], params['candidate'])
@@ -45,7 +47,7 @@ end
 
 get '/polls/:id/result' do
   index = params['id'].to_i
-  poll = db.polls[index]
+  poll = $polls[index]
   halt 404, '投票が見つかりませんでした' if poll.nil?
 
   result = poll.count_votes
