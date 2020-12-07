@@ -6,6 +6,7 @@ require_relative 'lib/vote'
 $polls = [
   Poll.new('好きな料理', ['肉じゃが', 'しょうが焼き', 'から揚げ']),
   Poll.new('人気投票', ['おむすびけん', 'クックパッドたん']),
+  Poll.new('期限を過ぎた投票', ['a', 'b'], Time.now)
 ]
 
 get '/' do
@@ -37,7 +38,6 @@ post '/polls/:id/votes' do
   index = params['id'].to_i
   poll = $polls[index]
   halt 404, '投票が見つかりませんでした' if poll.nil?
-  p params
   vote = Vote.new(params['voter'], params['candidate'])
   poll.add_vote(vote)
 
