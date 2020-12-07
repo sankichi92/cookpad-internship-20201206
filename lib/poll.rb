@@ -2,17 +2,25 @@ class Poll
   class InvalidCandidateError < StandardError
   end
 
-  attr_reader :title, :candidates, :votes
+  class InvalidVoteTimeError < StandardError
+  end
 
-  def initialize(title, candidates)
+  attr_reader :title, :candidates, :votes, :deadline
+
+  def initialize(title, candidates, deadline = nil)
     @title = title
     @candidates = candidates
     @votes = []
+    @deadline = deadline
   end
 
   def add_vote(vote)
     unless candidates.include?(vote.candidate)
       raise InvalidCandidateError, "Candidate '#{vote.candidate}' is invalid"
+    end
+
+    if deadline != nil && Time.now > deadline
+      raise InvalidVoteTimeError
     end
 
     @votes.push(vote)

@@ -26,6 +26,14 @@ RSpec.describe Poll do
         expect { poll.add_vote(vote) }.to raise_error Poll::InvalidCandidateError
       end
     end
+
+    context 'reject when vote time passed the deadline' do
+      it 'raises InvalidVoteTimeError' do
+        poll = Poll.new('Awesome Poll', ['Alice', 'Bob'], Time.now - 10)
+        vote = Vote.new('Miyoshi', 'Alice')
+        expect { poll.add_vote(vote) }.to raise_error Poll::InvalidVoteTimeError
+      end
+    end
   end
 
 

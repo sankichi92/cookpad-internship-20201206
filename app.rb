@@ -42,6 +42,8 @@ post '/polls/:id/votes' do
   poll.add_vote(vote)
 
   redirect to("/polls/#{index}"), 303
+rescue Poll::InvalidVoteTimeError
+  halt 400, '投票期日を過ぎています'
 rescue Poll::InvalidCandidateError
   halt 400, '不正な候補名です'
 end

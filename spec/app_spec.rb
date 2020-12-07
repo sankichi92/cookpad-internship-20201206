@@ -88,17 +88,21 @@ RSpec.describe 'PollApp' do
   end
 
   describe 'POST /polls/:id/votes' do
-    let(:poll) { Poll.new('Example Poll', ['Alice', 'Bob']) }
+    let(:polls) { [
+      Poll.new('Example Poll', ['Alice', 'Bob']),
+      Poll.new('Expired Poll', ['Alice', 'Bob'], Time.now - 10)
+    ]
+    }
 
     before do
-      $polls = [poll]
+      $polls = polls
     end
 
     context 'with valid id and params' do
       it 'adds a vote and redirects to /polls/:id' do
         expect {
           post '/polls/0/votes', { voter: 'Miyoshi', candidate: 'Alice' }
-        }.to change { poll.votes.size }.by(1)
+        }.to change { polls[0].votes.size }.by(1)
 
         expect(last_response.status).to eq 303
         expect(last_response.headers['Location']).to match %r{/polls/0$}
@@ -108,8 +112,8 @@ RSpec.describe 'PollApp' do
     context 'with invalid id' do
       it 'responds 404 Not Found' do
         expect {
-          post '/polls/1/votes', { voter: 'Miyoshi', candidate: 'Alice' }
-        }.not_to change { poll.votes.size }
+          post '/polls/2/votes', { voter: 'Miyoshi', candidate: 'Alice' }
+        }.not_to change { polls[1].votes.size }
 
         expect(last_response.status).to eq 404
       end
@@ -119,7 +123,17 @@ RSpec.describe 'PollApp' do
       it 'responds 400 Bad Request' do
         expect {
           post '/polls/0/votes', { voter: 'Miyoshi', candidate: 'INVALID' }
-        }.not_to change { poll.votes.size }
+        }.not_to change { polls[0].votes.size }
+
+        expect(last_response.status).to eq 400
+      end
+    end
+
+    context 'with invalid time' do
+      it 'responds 400 Bad Request' do
+        expect {
+          post '/polls/1/votes', { voter: 'Miyoshi', candidate: 'INVALID' }
+        }.not_to change { polls[1].votes.size }
 
         expect(last_response.status).to eq 400
       end
