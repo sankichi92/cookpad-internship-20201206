@@ -88,11 +88,11 @@ RSpec.describe 'PollApp' do
   end
 
   describe 'POST /polls/:id/votes' do
-    let(:polls) { [
-      Poll.new('Example Poll', ['Alice', 'Bob']),
-      Poll.new('Expired Poll', ['Alice', 'Bob'], Time.now - 10),
-
-    ]
+    let(:polls) {
+      [
+        Poll.new('Example Poll', ['Alice', 'Bob']),
+        Poll.new('Expired Poll', ['Alice', 'Bob'], Time.now - 10),
+      ]
     }
 
     before do
