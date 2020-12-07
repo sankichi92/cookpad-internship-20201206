@@ -6,6 +6,14 @@ require_relative 'db/fetch_db'
 
 db = Fetch_DB.new('localhost', 'postgres', 'postgres', 'password') #データベースへの接続
 
+# データベースへの接続が無い場合
+if db.connection == nil
+  db.set_polls([
+  Poll.new('好きな料理', ['肉じゃが', 'しょうが焼き', 'から揚げ']),
+  Poll.new('人気投票', ['おむすびけん', 'クックパッドたん']),
+])
+end
+
 get '/' do
   erb :index, locals: { polls: db.polls }
 end
@@ -26,7 +34,9 @@ post '/polls/:id/votes' do
   vote = Vote.new(params['voter'], params['candidate'])
   poll.add_vote(vote)
 
-  db.vote(params['voter'], index + 1, params['candidate']) #データベースに票を追加する
+  if db.connection != nil
+    db.vote(params['voter'], index + 1, params['candidate']) #データベースに票を追加する
+  end
 
   redirect to("/polls/#{index}"), 303
 rescue Poll::InvalidCandidateError

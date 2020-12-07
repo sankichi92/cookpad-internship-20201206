@@ -9,7 +9,7 @@ require 'pg'
 =end
 
 class Fetch_DB
-  attr_reader :host, :database, :user, :polls
+  attr_reader :host, :database, :user, :connection, :polls
 
   #初期設定（データベースの接続や票の情報の取得）
   def initialize(host, database, user, password)
@@ -18,13 +18,20 @@ class Fetch_DB
     @user = user
     @password = password
     @connection = connect(host, database, user, password)
-    @polls = get_polls()
+    if @connection == nil #データベースの接続のチェック
+      @polls = nil
+    else
+      @polls = get_polls()
+    end
   end
 
   #データベースに接続し、接続情報を返すメソッド
   def connect(host, database, user, password)
     connection = PG::Connection.new(:host => host, :user => user, :dbname => database, :port => '5432', :password => password)
     connection
+  rescue PG::ConnectionBad #データベースに接続できなかった場合
+    puts "データベースにアクセス出来ませんでした"
+    nil #nilを返す
   end
 
   #データベースのテーブルを作成するメソッド
@@ -37,14 +44,14 @@ class Fetch_DB
   def get_polls()
     table_info = @connection.exec("SELECT EXISTS (SELECT * FROM information_schema.tables
                                   WHERE table_name = 'poll');") #テーブルの存在を確認
-    
+
     if  table_info[0]["exists"] == "f" #テーブルが存在しない場合
       create_tables() #テンプレ追加
     end
-    
+
     polls = [] #投票の情報
     poll_res = @connection.exec('SELECT * FROM poll;') #全ての投票の情報を取得
-    
+
     poll_res.each do |poll|
       title = poll["title"]
 
@@ -71,5 +78,10 @@ class Fetch_DB
   def vote(voter, poll_id, candidate)
     @connection.exec("INSERT INTO vote
                      VALUES('#{ voter.to_s }', #{ poll_id }, '#{ candidate }');")
+  end
+
+#投票の設定をするメソッド（データベースに接続できなかった場合）
+  def set_polls(polls)
+    @polls = polls
   end
 end
