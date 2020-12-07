@@ -5,4 +5,5 @@ gem 'sinatra-contrib'
 
 gem 'rack-test'
 gem 'rspec'
+gem 'pg'
 # gem 'rubocop'
