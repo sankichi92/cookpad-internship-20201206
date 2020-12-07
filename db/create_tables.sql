@@ -17,7 +17,7 @@ CREATE TABLE vote(
     poll_id NUMERIC NOT NULL,
     candidate VARCHAR(30) NOT NULL,
     vote_date DATE DEFAULT CURRENT_DATE,
-    CONSTRAINT vote_pk PRIMARY KEY(voter),
+    CONSTRAINT vote_pk PRIMARY KEY(voter, poll_id),
     CONSTRAINT vote_fk FOREIGN KEY(poll_id, candidate) REFERENCES poll_candidate(poll_id, candidate)
 );
 
@@ -41,6 +41,3 @@ VALUES(2, 'おむすびけん');
 
 INSERT INTO poll_candidate
 VALUES(2, 'クックパッドたん');
-
-INSERT INTO vote
-VALUES('Arata', 1, '肉じゃが');
